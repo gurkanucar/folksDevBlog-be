@@ -29,40 +29,73 @@ class BlogPostServiceTest {
     @BeforeEach
     void setup() {
         blogPostRepository = Mockito.mock(BlogPostRepository.class);
-        blogPostDtoConverter = new BlogPostDtoConverter();
+        //sor
+        //blogPostDtoConverter = new BlogPostDtoConverter();
+        blogPostDtoConverter = Mockito.mock(BlogPostDtoConverter.class);
         blogPostService = new BlogPostService(blogPostRepository, blogPostDtoConverter);
     }
 
     @Test
     public void test_CreateBlogPost() {
-        BlogPostDto newBlogPost = new BlogPostDto.Builder()
+        /* 1. Adim: Veri Hazirlama */
+        BlogPostDto newBlogPostDto = new BlogPostDto.Builder()
                 .id(1L)
                 .name("Post1")
                 .build();
 
-        Mockito.doReturn(blogPostDtoConverter.dtoToBlogPost(newBlogPost))
-                .when(blogPostRepository).save(any());
+        BlogPost newBlogPostConverted = new BlogPost.Builder()
+                .id(1L)
+                .name("Post1")
+                .build();
 
-        BlogPostDto expected = blogPostService.createBlogPost(newBlogPost);
 
-        Assertions.assertEquals(expected, newBlogPost);
+        /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
+        Mockito.when(blogPostDtoConverter
+                .blogPostToDto(newBlogPostConverted)).thenReturn(newBlogPostDto);
+
+        Mockito.when(blogPostDtoConverter
+                .dtoToBlogPost(newBlogPostDto)).thenReturn(newBlogPostConverted);
+
+        Mockito.when(blogPostRepository.save(newBlogPostConverted))
+                .thenReturn(newBlogPostConverted);
+
+
+        /* 3. Adim: Test edilecek metodu calistir */
+        BlogPostDto expected = blogPostService.createBlogPost(newBlogPostDto);
+
+        /* 4. Adim: Sonucu, beklenen veri ile karsilastir. */
+        Assertions.assertEquals(expected, newBlogPostDto);
+
+        /* 5. Adim: hangi davranışlar gerçekleştirilmiş kontrol et */
+        Mockito.verify(blogPostDtoConverter).blogPostToDto(newBlogPostConverted);
+        Mockito.verify(blogPostDtoConverter).dtoToBlogPost(newBlogPostDto);
+        Mockito.verify(blogPostRepository).save(newBlogPostConverted);
+
+
 
     }
 
     @Test
     public void test_GetBlogPostById_whenIdExistsInDatabase() {
+        /* 1. Adim: Veri Hazirlama */
         Long ID = 1L;
         BlogPost blogPost = new BlogPost.Builder()
                 .id(ID)
                 .name("Post")
                 .build();
 
+        /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
         Mockito.when(blogPostRepository.findById(ID))
                 .thenReturn(Optional.ofNullable(blogPost));
 
+        /* 3. Adim: Test edilecek metodu calistir */
         BlogPost expected = blogPostService.getBlogPostById(ID);
 
+        /* 4. Adim: Sonucu, beklenen veri ile karsilastir. */
         Assertions.assertEquals(blogPost, expected);
+
+        /* 5. Adim: hangi davranışlar gerçekleştirilmiş kontrol et */
+        Mockito.verify(blogPostRepository).findById(ID);
     }
 
 
@@ -75,7 +108,8 @@ class BlogPostServiceTest {
     }
 
     @Test
-    public void testUpdateBlogPost_whenBlogPostIDExist_ShouldReturnUpdatedBlogPost() {
+    public void testUpdateBlogPost_ShouldReturnUpdatedBlogPost() {
+        /* 1. Adim: Veri Hazirlama */
         Long ID = 1L;
 
         BlogPost existing = new BlogPost.Builder()
@@ -88,11 +122,59 @@ class BlogPostServiceTest {
                 .name("postWithNewValues")
                 .build();
 
+        /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
+        // mock sinif yok
+
+        /* 3. Adim: Test edilecek metodu calistir */
         BlogPost expected = blogPostService.updateBlogPost(existing, blogPostWithNewValues);
 
+        /* 4. Adim: Sonucu, beklenen veri ile karsilastir. */
         Assertions.assertEquals(existing, expected);
 
     }
 
+    @Test
+    public void testupdateBlogPostById_whenBlogPostIDExist_ShouldReturnUpdatedBlogPost() {
+        /* 1. Adim: Veri Hazirlama */
+        Long ID = 1L;
+
+        BlogPost existing = new BlogPost.Builder()
+                .id(ID)
+                .name("post")
+                .build();
+
+        BlogPostDto blogPostWithNewValues = new BlogPostDto.Builder()
+                .id(ID)
+                .name("postWithNewValues")
+                .build();
+
+        BlogPost existingAfterUpdate = new BlogPost.Builder()
+                .id(ID)
+                .name("postWithNewValues")
+                .build();
+
+        /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
+        Mockito.when(blogPostRepository.findById(ID)).thenReturn(Optional.ofNullable(existing));
+        //Burayi sor icindeki methodu zaten test ettik tekrar mocklamaya gerek var mi
+        //Mockito.when(blogPostService.updateBlogPost(existing,blogPostWithNewValues)).thenReturn(existingAfterUpdate);
+        Mockito.when(blogPostRepository.save(any())).thenReturn(existingAfterUpdate);
+        Mockito.when(blogPostDtoConverter.blogPostToDto(existingAfterUpdate)).thenReturn(blogPostWithNewValues);
+
+
+        /* 3. Adim: Test edilecek metodu calistir */
+        BlogPostDto expected = blogPostService.updateBlogPostById(ID, blogPostWithNewValues);
+
+        /* 4. Adim: Sonucu, beklenen veri ile karsilastir. */
+        Assertions.assertEquals(expected,blogPostWithNewValues);
+
+        /* 5. Adim: hangi davranışlar gerçekleştirilmiş kontrol et */
+        Mockito.verify(blogPostRepository).findById(ID);
+        //yukarda nesne verip asagida any versek olur mu?
+        Mockito.verify(blogPostRepository).save(any());
+        Mockito.verify(blogPostDtoConverter).blogPostToDto(any());
+        //icerdeki test edilen method tekrar verify edilir mi?
+        //Mockito.verify(blogPostService.updateBlogPost(existing,blogPostWithNewValues));
+
+    }
 
 }
