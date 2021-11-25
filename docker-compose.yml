@@ -5,9 +5,9 @@ services:
     image: mysql:8
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_DATABASE=folksdev_blog
-      - MYSQL_PASSWORD=1234
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: folksdev_blog
+      MYSQL_PASSWORD: 1234
     ports:
       - 3307:3306
 
