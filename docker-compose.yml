@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  mysql-standalone:
+  mysqldb:
     image: mysql:8
     restart: always
     environment:
@@ -19,9 +19,9 @@ services:
     ports:
       - 8080:8080
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-standalone:3306/folksdev_blog?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/folksdev_blog?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234
 
     depends_on:
-      - mysql-standalone
+      - mysqldb
