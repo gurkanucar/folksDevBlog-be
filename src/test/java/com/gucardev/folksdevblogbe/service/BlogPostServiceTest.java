@@ -1,5 +1,6 @@
 package com.gucardev.folksdevblogbe.service;
 
+import com.gucardev.folksdevblogbe.TestSupport;
 import com.gucardev.folksdevblogbe.dto.BlogPostDto;
 import com.gucardev.folksdevblogbe.dto.converter.BlogPostDtoConverter;
 import com.gucardev.folksdevblogbe.exception.BlogPostNotFoundException;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -18,8 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class BlogPostServiceTest {
-
+class BlogPostServiceTest extends TestSupport {
 
     private BlogPostService blogPostService;
     private BlogPostRepository blogPostRepository;
@@ -28,9 +30,9 @@ class BlogPostServiceTest {
 
     @BeforeEach
     void setup() {
-        blogPostRepository = Mockito.mock(BlogPostRepository.class);
         //sor
         //blogPostDtoConverter = new BlogPostDtoConverter();
+        blogPostRepository = Mockito.mock(BlogPostRepository.class);
         blogPostDtoConverter = Mockito.mock(BlogPostDtoConverter.class);
         blogPostService = new BlogPostService(blogPostRepository, blogPostDtoConverter);
     }
@@ -38,15 +40,9 @@ class BlogPostServiceTest {
     @Test
     public void test_CreateBlogPost() {
         /* 1. Adim: Veri Hazirlama */
-        BlogPostDto newBlogPostDto = new BlogPostDto.Builder()
-                .id(1L)
-                .name("Post1")
-                .build();
+        BlogPostDto newBlogPostDto = generateBlogPostDto(1L,"Post1","details");
 
-        BlogPost newBlogPostConverted = new BlogPost.Builder()
-                .id(1L)
-                .name("Post1")
-                .build();
+        BlogPost newBlogPostConverted = generateBlogPost(1L,"Post1","details");
 
 
         /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
@@ -79,10 +75,7 @@ class BlogPostServiceTest {
     public void test_GetBlogPostById_whenIdExistsInDatabase() {
         /* 1. Adim: Veri Hazirlama */
         Long ID = 1L;
-        BlogPost blogPost = new BlogPost.Builder()
-                .id(ID)
-                .name("Post")
-                .build();
+        BlogPost blogPost = generateBlogPost(ID,"Post","details");
 
         /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
         Mockito.when(blogPostRepository.findById(ID))
@@ -111,16 +104,8 @@ class BlogPostServiceTest {
     public void testUpdateBlogPost_ShouldReturnUpdatedBlogPost() {
         /* 1. Adim: Veri Hazirlama */
         Long ID = 1L;
-
-        BlogPost existing = new BlogPost.Builder()
-                .id(ID)
-                .name("post")
-                .build();
-
-        BlogPostDto blogPostWithNewValues = new BlogPostDto.Builder()
-                .id(ID)
-                .name("postWithNewValues")
-                .build();
+        BlogPost existing = generateBlogPost(ID,"Post1","details");
+        BlogPostDto blogPostWithNewValues = generateBlogPostDto(ID,"Post1","postWithNewValues");
 
         /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
         // mock sinif yok
@@ -138,20 +123,10 @@ class BlogPostServiceTest {
         /* 1. Adim: Veri Hazirlama */
         Long ID = 1L;
 
-        BlogPost existing = new BlogPost.Builder()
-                .id(ID)
-                .name("post")
-                .build();
+        BlogPost existing = generateBlogPost(ID,"Post1","post");
+        BlogPostDto blogPostWithNewValues = generateBlogPostDto(ID,"Post1","postWithNewValues");
+        BlogPost existingAfterUpdate = generateBlogPost(ID,"Post1","postWithNewValues");
 
-        BlogPostDto blogPostWithNewValues = new BlogPostDto.Builder()
-                .id(ID)
-                .name("postWithNewValues")
-                .build();
-
-        BlogPost existingAfterUpdate = new BlogPost.Builder()
-                .id(ID)
-                .name("postWithNewValues")
-                .build();
 
         /* 2. Adim: Davranis belirleme (Mock siniflar icin) */
         Mockito.when(blogPostRepository.findById(ID)).thenReturn(Optional.ofNullable(existing));
