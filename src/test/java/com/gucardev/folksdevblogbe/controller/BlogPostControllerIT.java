@@ -25,8 +25,7 @@ class BlogPostControllerIT extends IntegrationTestSupport {
         this.mockMvc.perform(get(baseUrl + "/post/" + blogPost.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id", is(blogPost.getId())));
-
+                .andExpect(jsonPath("$.id", is(blogPost.getId().intValue())));
     }
 
     @Test
