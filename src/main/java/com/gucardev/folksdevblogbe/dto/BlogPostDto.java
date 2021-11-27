@@ -3,6 +3,7 @@ package com.gucardev.folksdevblogbe.dto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,12 +21,15 @@ public class BlogPostDto {
     @NotNull
     @NotBlank
     private String name;
+
     private String imageUrl;
     @NotNull
     @NotBlank
-    @Size(max = 2000)
+    @Column(columnDefinition = "LONGTEXT")
     private String details;
 
+    @NotNull
+    @NotBlank
     private String videoUrl;
 
     private boolean deleted;

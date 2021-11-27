@@ -33,11 +33,17 @@ public class BlogPost implements Serializable {
     @NotNull
     @NotBlank
     private String name;
+
+
     private String imageUrl;
 
-    @Size(max = 2000)
+    @NotNull
+    @NotBlank
+    @Column(columnDefinition = "LONGTEXT")
     private String details;
 
+    @NotNull
+    @NotBlank
     private String videoUrl;
 
     @Override
