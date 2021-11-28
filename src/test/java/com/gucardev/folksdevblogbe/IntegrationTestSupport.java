@@ -66,6 +66,26 @@ public class IntegrationTestSupport {
                 .build();
     }
 
+    public BlogPostDto generateBlogPostDto(Long id, String name,String details, String videoUrl) {
+        return new BlogPostDto.Builder()
+                .id(id)
+                .name(name)
+                .details(details)
+                .videoUrl(videoUrl)
+                .build();
+    }
+
+    public BlogPost generateBlogPost(Long id, String name,String details, String videoUrl) {
+        return new BlogPost.Builder()
+                .id(id)
+                .name(name)
+                .details(details)
+                .videoUrl(videoUrl)
+                .build();
+    }
+
+
+
 
     public List<BlogPostDto> generateBlogPostDtos(int size) {
         return IntStream.range(0, size)

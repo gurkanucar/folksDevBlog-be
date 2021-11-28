@@ -30,9 +30,9 @@ class BlogPostServiceTest extends TestSupport {
 
     @BeforeEach
     void setup() {
-        //sor
-        //blogPostDtoConverter = new BlogPostDtoConverter();
+
         blogPostRepository = Mockito.mock(BlogPostRepository.class);
+        //sor
         blogPostDtoConverter = Mockito.mock(BlogPostDtoConverter.class);
         blogPostService = new BlogPostService(blogPostRepository, blogPostDtoConverter);
     }
