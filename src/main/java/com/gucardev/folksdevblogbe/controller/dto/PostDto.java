@@ -1,42 +1,24 @@
-package com.gucardev.folksdevblogbe.model;
+package com.gucardev.folksdevblogbe.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-@Entity
-@Where(clause = "deleted = false")
-public class BlogPost implements Serializable {
+public class PostDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
-    private boolean deleted;
-
-    @CreationTimestamp
     private Timestamp created;
 
-    @UpdateTimestamp
     private Timestamp modified;
 
     @NotNull
     @NotBlank
     private String name;
 
-
     private String imageUrl;
-
     @NotNull
     @NotBlank
     @Column(columnDefinition = "LONGTEXT")
@@ -46,32 +28,35 @@ public class BlogPost implements Serializable {
     @NotBlank
     private String videoUrl;
 
+    private boolean deleted;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BlogPost blogPost = (BlogPost) o;
-        return id.equals(blogPost.id) && deleted == blogPost.deleted && Objects.equals(created, blogPost.created) && Objects.equals(modified, blogPost.modified) && Objects.equals(name, blogPost.name) && Objects.equals(imageUrl, blogPost.imageUrl) && Objects.equals(details, blogPost.details) && Objects.equals(videoUrl, blogPost.videoUrl);
+        PostDto that = (PostDto) o;
+        return deleted == that.deleted && Objects.equals(id, that.id) && Objects.equals(created, that.created) && Objects.equals(modified, that.modified) && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(details, that.details) && Objects.equals(videoUrl, that.videoUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, deleted, created, modified, name, imageUrl, details, videoUrl);
+        return Objects.hash(id, created, modified, name, imageUrl, details, videoUrl, deleted);
     }
 
     @Override
     public String toString() {
-        return "BlogPost{" +
+        return "BlogPostDto{" +
                 "id=" + id +
-                ", deleted=" + deleted +
                 ", created=" + created +
                 ", modified=" + modified +
                 ", name='" + name + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", details='" + details + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
+                ", deleted=" + deleted +
                 '}';
     }
+
 
     public Long getId() {
         return id;
@@ -79,14 +64,6 @@ public class BlogPost implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public Timestamp getCreated() {
@@ -137,60 +114,70 @@ public class BlogPost implements Serializable {
         this.videoUrl = videoUrl;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
 
     public static final class Builder {
-        private BlogPost blogPost;
+        private PostDto postDto;
 
         public Builder() {
-            blogPost = new BlogPost();
+            postDto = new PostDto();
         }
 
-        public static Builder aBlogPost() {
+        public static Builder aBlogPostDto() {
             return new Builder();
         }
 
         public Builder id(Long id) {
-            blogPost.setId(id);
-            return this;
-        }
-
-        public Builder deleted(boolean deleted) {
-            blogPost.setDeleted(deleted);
+            postDto.setId(id);
             return this;
         }
 
         public Builder created(Timestamp created) {
-            blogPost.setCreated(created);
+            postDto.setCreated(created);
             return this;
         }
 
         public Builder modified(Timestamp modified) {
-            blogPost.setModified(modified);
+            postDto.setModified(modified);
             return this;
         }
 
         public Builder name(String name) {
-            blogPost.setName(name);
+            postDto.setName(name);
             return this;
         }
 
         public Builder imageUrl(String imageUrl) {
-            blogPost.setImageUrl(imageUrl);
+            postDto.setImageUrl(imageUrl);
             return this;
         }
 
         public Builder details(String details) {
-            blogPost.setDetails(details);
+            postDto.setDetails(details);
             return this;
         }
 
         public Builder videoUrl(String videoUrl) {
-            blogPost.setVideoUrl(videoUrl);
+            postDto.setVideoUrl(videoUrl);
             return this;
         }
 
-        public BlogPost build() {
-            return blogPost;
+        public Builder deleted(boolean deleted) {
+            postDto.setDeleted(deleted);
+            return this;
+        }
+
+        public PostDto build() {
+            return postDto;
         }
     }
 }
+
+

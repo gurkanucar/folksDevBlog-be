@@ -75,14 +75,14 @@ Start the application
 #### • Get all posts
 
 ```http
-  GET /api/v1/blogPost/posts
+  GET /api/v1/post/posts
 ```
 
 
 #### • Get post by id
 
 ```http
-  GET /api/v1/blogPost/post/${id}
+  GET /api/v1/post/post/${id}
 ```
 
 | Parameter | Type     | Explanation                       |
@@ -94,7 +94,7 @@ Start the application
 #### • Create post
 
 ```http
-  POST /api/v1/blogPost/post/${id}
+  POST /api/v1/post/post/${id}
 ```
 
  Only "imageUrl" is not required
@@ -111,7 +111,7 @@ Start the application
 #### • Update post by id
 
 ```http
-  PUT /api/v1/blogPost/post/${id}
+  PUT /api/v1/post/post/${id}
 ```
 
  "imageUrl" and "deleted" are not required
@@ -137,7 +137,7 @@ Start the application
 #### • Delete post by id
 
 ```http
-  DELETE /api/v1/blogPost/post/${id}
+  DELETE /api/v1/post/post/${id}
 ```
 
 | Parameter | Type     | Explanation                       |

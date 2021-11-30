@@ -1,11 +1,11 @@
 package com.gucardev.folksdevblogbe.repository;
 
-import com.gucardev.folksdevblogbe.model.BlogPost;
+import com.gucardev.folksdevblogbe.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
 
 

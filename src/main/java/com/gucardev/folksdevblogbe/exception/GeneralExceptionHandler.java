@@ -34,8 +34,8 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
 
 
-    @ExceptionHandler(BlogPostNotFoundException.class)
-    public ResponseEntity<?> shortUrlNotFoundExceptionHandler(BlogPostNotFoundException exception)  {
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<?> shortUrlNotFoundExceptionHandler(PostNotFoundException exception)  {
         Map<String, String> errors = new HashMap<>();
         errors.put("error",exception.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
