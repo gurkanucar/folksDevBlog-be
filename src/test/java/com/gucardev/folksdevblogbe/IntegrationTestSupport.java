@@ -3,12 +3,12 @@ package com.gucardev.folksdevblogbe;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.gucardev.folksdevblogbe.controller.BlogPostController;
-import com.gucardev.folksdevblogbe.dto.BlogPostDto;
-import com.gucardev.folksdevblogbe.dto.converter.BlogPostDtoConverter;
-import com.gucardev.folksdevblogbe.model.BlogPost;
-import com.gucardev.folksdevblogbe.repository.BlogPostRepository;
-import com.gucardev.folksdevblogbe.service.BlogPostService;
+import com.gucardev.folksdevblogbe.controller.PostController;
+import com.gucardev.folksdevblogbe.controller.dto.PostDto;
+import com.gucardev.folksdevblogbe.controller.dto.converter.PostDtoConverter;
+import com.gucardev.folksdevblogbe.model.Post;
+import com.gucardev.folksdevblogbe.repository.PostRepository;
+import com.gucardev.folksdevblogbe.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,16 +29,16 @@ import java.util.stream.IntStream;
 public class IntegrationTestSupport {
 
     @Autowired // integration testlerde kontrol edilebilmesi icin siniflarimizi mockalamadan ekledik
-    public BlogPostService blogPostService;
+    public PostService postService;
 
     @Autowired
-    public BlogPostController blogPostController;
+    public PostController postController;
 
     @Autowired
-    public BlogPostRepository blogPostRepository;
+    public PostRepository postRepository;
 
     @Autowired
-    public BlogPostDtoConverter blogPostDtoConverter;
+    public PostDtoConverter postDtoConverter;
 
     public final ObjectMapper mapper = new ObjectMapper();
 
@@ -52,31 +52,22 @@ public class IntegrationTestSupport {
     }
 
 
-    public BlogPost generateBlogPost(Long id, String name) {
-        return new BlogPost.Builder()
+    public Post generateBlogPost(Long id, String name) {
+        return new Post.Builder()
                 .id(id)
                 .name(name)
                 .build();
     }
 
-    public BlogPostDto generateBlogPostDto(Long id, String name) {
-        return new BlogPostDto.Builder()
+    public PostDto generateBlogPostDto(Long id, String name) {
+        return new PostDto.Builder()
                 .id(id)
                 .name(name)
                 .build();
     }
 
-    public BlogPostDto generateBlogPostDto(Long id, String name,String details, String videoUrl) {
-        return new BlogPostDto.Builder()
-                .id(id)
-                .name(name)
-                .details(details)
-                .videoUrl(videoUrl)
-                .build();
-    }
-
-    public BlogPost generateBlogPost(Long id, String name,String details, String videoUrl) {
-        return new BlogPost.Builder()
+    public PostDto generateBlogPostDto(Long id, String name, String details, String videoUrl) {
+        return new PostDto.Builder()
                 .id(id)
                 .name(name)
                 .details(details)
@@ -84,16 +75,25 @@ public class IntegrationTestSupport {
                 .build();
     }
 
+    public Post generateBlogPost(Long id, String name, String details, String videoUrl) {
+        return new Post.Builder()
+                .id(id)
+                .name(name)
+                .details(details)
+                .videoUrl(videoUrl)
+                .build();
+    }
 
 
 
-    public List<BlogPostDto> generateBlogPostDtos(int size) {
+
+    public List<PostDto> generateBlogPostDtos(int size) {
         return IntStream.range(0, size)
                 .mapToObj(x -> generateBlogPostDto((long) x, "name"+x))
                 .collect(Collectors.toList());
     }
 
-    public List<BlogPost> generateBlogPosts(int size) {
+    public List<Post> generateBlogPosts(int size) {
         return IntStream.range(0, size)
                 .mapToObj(x -> generateBlogPost((long) x, "name"+x))
                 .collect(Collectors.toList());

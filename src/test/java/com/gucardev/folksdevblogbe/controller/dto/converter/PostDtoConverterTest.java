@@ -1,32 +1,27 @@
-package com.gucardev.folksdevblogbe.dto.converter;
+package com.gucardev.folksdevblogbe.controller.dto.converter;
 
-import com.gucardev.folksdevblogbe.dto.BlogPostDto;
-import com.gucardev.folksdevblogbe.model.BlogPost;
-import com.gucardev.folksdevblogbe.repository.BlogPostRepository;
-import com.gucardev.folksdevblogbe.service.BlogPostService;
+import com.gucardev.folksdevblogbe.controller.dto.PostDto;
+import com.gucardev.folksdevblogbe.model.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class BlogPostDtoConverterTest {
+class PostDtoConverterTest {
 
-    private BlogPostDtoConverter blogPostDtoConverter;
+    private PostDtoConverter postDtoConverter;
 
 
     @BeforeEach
     void setup() {
-        blogPostDtoConverter = new BlogPostDtoConverter();
+        postDtoConverter = new PostDtoConverter();
     }
 
 
     @Test
     public void test_convertBlogPostToDto() {
-        BlogPost blogPost = new BlogPost.Builder()
+       final var blogPost = new Post.Builder()
                 .name("name")
                 .details("detail")
                 .imageUrl("img")
@@ -34,7 +29,7 @@ class BlogPostDtoConverterTest {
                 .deleted(false)
                 .build();
 
-        BlogPostDto blogPostDto = new BlogPostDto.Builder()
+        final var expected = new PostDto.Builder()
                 .name("name")
                 .details("detail")
                 .imageUrl("img")
@@ -42,9 +37,8 @@ class BlogPostDtoConverterTest {
                 .deleted(false)
                 .build();
 
-        BlogPostDto expected = blogPostDtoConverter.blogPostToDto(blogPost);
-
-        Assertions.assertEquals(expected, blogPostDto);
+        PostDto actual = postDtoConverter.postToDto(blogPost);
+        Assertions.assertEquals(expected, actual);
 
     }
 
@@ -52,7 +46,7 @@ class BlogPostDtoConverterTest {
     @Test
     public void test_convertDtoToBlogPost() {
 
-        BlogPostDto blogPostDto = new BlogPostDto.Builder()
+        PostDto postDto = new PostDto.Builder()
                 .id(1L)
                 .name("name")
                 .details("detail")
@@ -61,7 +55,7 @@ class BlogPostDtoConverterTest {
                 .deleted(false)
                 .build();
 
-        BlogPost blogPost = new BlogPost.Builder()
+        Post expected = new Post.Builder()
                 .id(1L)
                 .name("name")
                 .details("detail")
@@ -70,9 +64,9 @@ class BlogPostDtoConverterTest {
                 .deleted(false)
                 .build();
 
-        BlogPost expected = blogPostDtoConverter.dtoToBlogPost(blogPostDto);
+        Post actual = postDtoConverter.dtoToPost(postDto);
 
-        Assertions.assertEquals(expected.getName(), blogPost.getName());
+        Assertions.assertEquals(expected, actual);
 
     }
 

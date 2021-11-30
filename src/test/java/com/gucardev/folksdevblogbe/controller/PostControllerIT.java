@@ -1,12 +1,12 @@
 package com.gucardev.folksdevblogbe.controller;
 
 import com.gucardev.folksdevblogbe.IntegrationTestSupport;
-import com.gucardev.folksdevblogbe.dto.BlogPostDto;
-import com.gucardev.folksdevblogbe.model.BlogPost;
+import com.gucardev.folksdevblogbe.controller.dto.PostDto;
+import com.gucardev.folksdevblogbe.model.Post;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -14,12 +14,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-class BlogPostControllerIT extends IntegrationTestSupport {
+class PostControllerIT extends IntegrationTestSupport {
 
     public String baseUrl = "/api/v1/blogPost";
 
 
     @Test
+    @DisplayName(" testGetAllBlogPosts_whenRequest_shouldReturnListOfBlogPostDtos ")
     public void testGetAllBlogPosts_whenRequest_shouldReturnListOfBlogPostDtos() throws Exception {
 
         this.mockMvc.perform(get(baseUrl + "/posts"))
@@ -30,24 +31,24 @@ class BlogPostControllerIT extends IntegrationTestSupport {
 
     @Test
     public void testCreateBlogPost_whenRequestBodyIncludesBlogPostDto_shouldReturnBlogPostDto() throws Exception {
-        BlogPostDto blogPostDto = generateBlogPostDto(1L, "postName", "details", "video");
+        PostDto postDto = generateBlogPostDto(1L, "postName", "details", "video");
 
-        String requestJson = mapper.writeValueAsString(blogPostDto);
+        String requestJson = mapper.writeValueAsString(postDto);
 
         this.mockMvc.perform(post(baseUrl + "/post")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.name", is(blogPostDto.getName())));
+                .andExpect(jsonPath("$.name", is(postDto.getName())));
 
     }
 
     @Test
     public void testCreateBlogPost_whenRequestBodyIncludesMissingValuesOfBlogPostDto_shouldThrowError() throws Exception {
-        BlogPostDto blogPostDto = generateBlogPostDto(1L, "postName");
+        PostDto postDto = generateBlogPostDto(1L, "postName");
 
-        String requestJson = mapper.writeValueAsString(blogPostDto);
+        String requestJson = mapper.writeValueAsString(postDto);
 
         this.mockMvc.perform(post(baseUrl + "/post")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -59,13 +60,13 @@ class BlogPostControllerIT extends IntegrationTestSupport {
 
     @Test
     public void testGetBlogPostById_whenBlogPostIdExist_shouldReturnBlogPostDto() throws Exception {
-        BlogPost blogPost = generateBlogPost(1L, "postName");
-        blogPost = blogPostRepository.save(blogPost);
+        Post post = generateBlogPost(1L, "postName");
+        post = postRepository.save(post);
 
-        this.mockMvc.perform(get(baseUrl + "/post/" + blogPost.getId())
+        this.mockMvc.perform(get(baseUrl + "/post/" + post.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id", is(blogPost.getId().intValue())));
+                .andExpect(jsonPath("$.id", is(post.getId().intValue())));
     }
 
     @Test
@@ -82,20 +83,20 @@ class BlogPostControllerIT extends IntegrationTestSupport {
 
         Long ID = anyLong();
 
-        BlogPost blogPost = generateBlogPost(ID, "postName", "details", "video");
-        blogPost = blogPostRepository.save(blogPost);
-        ID = blogPost.getId();
+        Post post = generateBlogPost(ID, "postName", "details", "video");
+        post = postRepository.save(post);
+        ID = post.getId();
 
-        BlogPostDto blogPostDtoForUpdateRequest = generateBlogPostDto(
+        PostDto postDtoForUpdateRequest = generateBlogPostDto(
                 ID, "postNameUpdated", "detailsUpdated", "videoUpdated");
 
         this.mockMvc.perform(put(baseUrl + "/post/" + ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(blogPostDtoForUpdateRequest)))
+                .content(mapper.writeValueAsString(postDtoForUpdateRequest)))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.name", is(blogPostDtoForUpdateRequest.getName())))
-                .andExpect(jsonPath("$.details", is(blogPostDtoForUpdateRequest.getDetails())))
-                .andExpect(jsonPath("$.videoUrl", is(blogPostDtoForUpdateRequest.getVideoUrl())));
+                .andExpect(jsonPath("$.name", is(postDtoForUpdateRequest.getName())))
+                .andExpect(jsonPath("$.details", is(postDtoForUpdateRequest.getDetails())))
+                .andExpect(jsonPath("$.videoUrl", is(postDtoForUpdateRequest.getVideoUrl())));
     }
 
 
@@ -104,14 +105,14 @@ class BlogPostControllerIT extends IntegrationTestSupport {
 
         Long ID = anyLong();
 
-        BlogPostDto blogPostDtoForUpdateRequest = generateBlogPostDto(
+        PostDto postDtoForUpdateRequest = generateBlogPostDto(
                 ID, "postNameUpdated", "detailsUpdated", "videoUpdated");
 
         String messageFromBlogPostNotFoundException = "Not found!";
 
         this.mockMvc.perform(put(baseUrl + "/post/" + ID + 12345L) // id doesn't exist
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(blogPostDtoForUpdateRequest)))
+                .content(mapper.writeValueAsString(postDtoForUpdateRequest)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error", is(messageFromBlogPostNotFoundException)));
     }
@@ -120,14 +121,22 @@ class BlogPostControllerIT extends IntegrationTestSupport {
     public void testDeleteBlogPostById_whenBlogPostNotExist_shouldThrowBlogPostDto() throws Exception {
 
         Long ID = anyLong();
-        BlogPost blogPost = generateBlogPost(ID, "postName", "details", "video");
-        blogPost = blogPostRepository.save(blogPost);
-        ID = blogPost.getId();
+//        BlogPost blogPost = generateBlogPost(ID, "postName", "details", "video");
+//        blogPost = blogPostRepository.save(blogPost);
+//        ID = blogPost.getId();
+
+        /// EDITLE
+       var id = this.mockMvc.perform(post(baseUrl + "/post/" + ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.deleted", is(true)));
 
         this.mockMvc.perform(delete(baseUrl + "/post/" + ID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.deleted", is(true)));
+
+
     }
 
     @Test

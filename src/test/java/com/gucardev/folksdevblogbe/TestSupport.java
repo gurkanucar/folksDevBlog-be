@@ -1,20 +1,20 @@
 package com.gucardev.folksdevblogbe;
 
-import com.gucardev.folksdevblogbe.dto.BlogPostDto;
-import com.gucardev.folksdevblogbe.model.BlogPost;
+import com.gucardev.folksdevblogbe.controller.dto.PostDto;
+import com.gucardev.folksdevblogbe.model.Post;
 
 public class TestSupport {
 
-    public BlogPost generateBlogPost(Long id, String name, String details) {
-        return new BlogPost.Builder()
+    public Post generateBlogPost(Long id, String name, String details) {
+        return new Post.Builder()
                 .id(id)
                 .name(name)
                 .details(details)
                 .build();
     }
 
-    public BlogPostDto generateBlogPostDto(Long id, String name, String details) {
-        return new BlogPostDto.Builder()
+    public PostDto generateBlogPostDto(Long id, String name, String details) {
+        return new PostDto.Builder()
                 .id(id)
                 .name(name)
                 .details(details)
